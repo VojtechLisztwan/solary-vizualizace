@@ -1,43 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const markdownContent = `# Dokumentace Solárního Systému (ESP32)
 
-Tento dokument obsahuje technickou specifikaci, logiku řízení a schémata pro projekt **Teplomer Backend (ESP32_solary)**.
-
-## 🛠 Technický přehled
-- **Hardware:** ESP32
-- **Komunikace:** Modbus TCP (čtení), MQTT & ThingSpeak (odesílání), ArduinoOTA (aktualizace).
-- **Měření:** 7 kanálů teploty (kolektor, bojler nový - 3x, bojler starý - 2x, pec).
-
-## 🚀 Provozní režimy (Mody)
-Na základě logiky firmwaru jsou definovány tyto reálné provozní stavy:
-
-### 1. Režim Diferenčního Ohřevu (Automatika)
-- **Podmínka sepnutí:** \`T_solarni\` - \`T_nadrz\` > **25 °C**.
-- **Podmínka vypnutí:** Rozdíl klesne pod **15 °C**.
-- **Cíl:** Maximalizace zisku energie při zachování životnosti čerpadla.
-
-### 2. Havarijní Režim (Ochrana proti přehřátí)
-- **Podmínka:** \`T_solarni\` > **95 °C**.
-- **Akce:** Čerpadlo se sepne na 100 %, aby došlo k ochlazení kolektoru do nádrží.
-
-### 3. Manuální / MQTT Režim (Vzdálený zásah)
-- **Zdroj:** Zpráva v MQTT tématu \`pump\`.
-- **Využití:** Servisní zásahy, testování systému nebo vynucené nahřátí.
-
-### 4. Režim Sledování Tarifu (Noční proud)
-- **Detekce:** Vstup \`NOCNI\`.
-- **Funkce:** Systém reportuje stav nízkého tarifu, což umožňuje budoucí rozšíření o logiku pro elektrický dohřev v době levné elektřiny.
-
-## 📋 Zapojení čidel
-| Čidlo | Umístění | Účel | 
-| ----- | ----- | ----- | 
-| **T1** | Solární kolektor | Hlavní zdroj tepla | 
-| **T2-T4** | Nový bojler | Stratifikace teploty v hlavní nádrži | 
-| **T5-T6** | Starý bojler | Monitoring sekundární nádrže | 
-| **Tp1** | Pec | Monitoring externího spalovacího zdroje | 
-
-*Dokumentace vygenerována pro: Vojtěch Lisztwan*`;
 
 export default function App() {
   const [copyStatus, setCopyStatus] = useState('');
@@ -70,21 +33,6 @@ export default function App() {
     }));
   };
 
-  const handleCopy = () => {
-    const textArea = document.createElement('textarea');
-    textArea.value = markdownContent;
-    document.body.appendChild(textArea);
-    textArea.select();
-    try {
-      document.execCommand('copy');
-      setCopyStatus('Úspěšně zkopírováno!');
-      setTimeout(() => setCopyStatus(''), 3000);
-    } catch (err) {
-      setCopyStatus('Chyba při kopírování.');
-      setTimeout(() => setCopyStatus(''), 3000);
-    }
-    document.body.removeChild(textArea);
-  };
 
   // HLAVNÍ SIMULAČNÍ SMYČKA (Fyzika + ESP32 Logika)
   useEffect(() => {
@@ -221,64 +169,7 @@ export default function App() {
         }
       `}</style>
 
-      {/* LEVÝ PANEL: Dokumentace */}
-      <div className="w-full xl:w-1/3 bg-white rounded-xl shadow-lg p-6 flex flex-col h-[850px]">
-        <div className="flex justify-between items-center mb-6 border-b pb-4">
-          <h2 className="text-2xl font-bold text-slate-800">Dokumentace</h2>
-          <button 
-            onClick={handleCopy}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium text-sm flex items-center gap-2"
-          >
-            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            Kopírovat .md
-          </button>
-        </div>
-
-        {copyStatus && (
-          <div className="bg-green-100 text-green-800 px-4 py-2 rounded mb-4 text-sm font-bold text-center border border-green-200">
-            {copyStatus}
-          </div>
-        )}
-
-        <div className="overflow-y-auto flex-1 pr-2 prose prose-sm prose-slate">
-          <h3 className="text-lg font-bold mt-0">🛠 Technický přehled</h3>
-          <ul className="list-disc pl-5 mb-4 space-y-1">
-            <li><strong>Hardware:</strong> ESP32</li>
-            <li><strong>Komunikace:</strong> Modbus TCP, MQTT & ThingSpeak, ArduinoOTA</li>
-            <li><strong>Měření:</strong> 7 kanálů teploty</li>
-          </ul>
-
-          <h3 className="text-lg font-bold">🚀 Provozní režimy (Mody)</h3>
-          
-          <h4 className="font-semibold text-blue-700">1. Diferenční Ohřev</h4>
-          <p className="mb-2 text-sm">Sepnutí při rozdílu &gt; 25°C, vypnutí při &lt; 15°C.</p>
-
-          <h4 className="font-semibold text-red-600">2. Havarijní Režim</h4>
-          <p className="mb-2 text-sm">T_solarni &gt; 95°C. Čerpadlo jede na 100%.</p>
-
-          <h4 className="font-semibold text-purple-600">3. Manuální (MQTT)</h4>
-          <p className="mb-2 text-sm">Vzdálený zásah přes téma <code>pump</code>.</p>
-
-          <h4 className="font-semibold text-yellow-600">4. Noční proud</h4>
-          <p className="mb-4 text-sm">Detekce přes vstup <code>NOCNI</code>.</p>
-
-          <h3 className="text-lg font-bold">📋 Čidla</h3>
-          <table className="w-full text-left border-collapse text-sm">
-            <thead>
-              <tr className="border-b-2">
-                <th className="py-1">Čidlo</th>
-                <th>Umístění</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b"><td className="py-1 font-bold">T1</td><td>Solární kolektor</td></tr>
-              <tr className="border-b"><td className="py-1 font-bold">T2-T4</td><td>Nový bojler (Stratifikace)</td></tr>
-              <tr className="border-b"><td className="py-1 font-bold">T5-T6</td><td>Starý bojler</td></tr>
-              <tr><td className="py-1 font-bold">Tp1</td><td>Pec</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+   
 
       {/* PRAVÝ PANEL: Interaktivní Animace */}
       <div className="w-full xl:w-2/3 bg-white rounded-xl shadow-lg p-6 flex flex-col">
