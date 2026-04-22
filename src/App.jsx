@@ -148,7 +148,7 @@ export default function App() {
   const barProgress = Math.min(100, Math.max(0, (currentRozdil / 30) * 100));
 
   return (
-    <div className="min-h-screen bg-slate-100 p-4 md:p-8 font-sans text-slate-800 flex flex-col xl:flex-row gap-8">
+    <div className="min-h-screen bg-slate-100 p-2 sm:p-4 md:p-8 font-sans text-slate-800 flex flex-col xl:flex-row gap-4 md:gap-8">
       
       <style>{`
         @keyframes dash {
@@ -172,12 +172,12 @@ export default function App() {
    
 
       {/* PRAVÝ PANEL: Interaktivní Animace */}
-      <div className="w-full xl:w-2/3 bg-white rounded-xl shadow-lg p-6 flex flex-col">
-        <div className="flex justify-between items-center mb-4 border-b pb-4">
+      <div className="w-full xl:w-2/3 bg-white rounded-xl shadow-lg p-2 sm:p-4 md:p-6 flex flex-col min-w-0">
+        <div className="flex flex-col gap-2 sm:flex-row justify-between items-start sm:items-center mb-4 border-b pb-4">
           <h2 className="text-2xl font-bold text-slate-800">Živá vizualizace a simulace</h2>
           
           {/* Přepínač rychlosti a autoswitch */}
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:gap-4 w-full sm:w-auto">
             <select 
               value={simSpeed} 
               onChange={e => setSimSpeed(Number(e.target.value))} 
@@ -208,7 +208,7 @@ export default function App() {
         </div>
 
         {/* Nastavení počátečních teplot */}
-        <div className="bg-slate-100 p-3 rounded-lg mb-4 text-sm border border-slate-200 shadow-sm">
+        <div className="bg-slate-100 p-2 sm:p-3 rounded-lg mb-4 text-sm border border-slate-200 shadow-sm">
           <div className="font-bold mb-2 flex justify-between items-center text-slate-700">
             <span>Výchozí teploty pro simulaci (°C):</span>
             <button onClick={handleReset} className="bg-red-500 text-white px-4 py-1.5 rounded-md text-xs font-bold hover:bg-red-600 shadow-sm transition-all">
@@ -231,7 +231,7 @@ export default function App() {
         </div>
         
         {/* Simulační vstupy (Posuvníky) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 p-4 bg-slate-800 rounded-lg text-white">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 p-2 sm:p-4 bg-slate-800 rounded-lg text-white">
           <div>
             <div className="flex justify-between mb-1">
               <label className="text-sm font-bold text-amber-400">☀ Výkon solárních kolektorů</label>
@@ -249,7 +249,7 @@ export default function App() {
         </div>
 
         {/* ESP32 Logika - Dynamický výpočet */}
-        <div className="bg-slate-900 text-white p-4 rounded-lg mb-4 shadow-md border border-slate-700 relative overflow-hidden">
+        <div className="bg-slate-900 text-white p-2 sm:p-4 rounded-lg mb-4 shadow-md border border-slate-700 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-2 opacity-10">
             <svg width="64" height="64" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0H5a2 2 0 0 1-2-2v-4m6 6h10a2 2 0 0 0 2-2v-4"></path></svg>
           </div>
@@ -258,7 +258,7 @@ export default function App() {
             ESP32 Živé proměnné (Neustále sledují teplotu)
           </h3>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm relative z-10">
+          <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 text-sm relative z-10">
             <div className="bg-slate-800 p-2 rounded border border-slate-700">
               <span className="block text-slate-400 text-[10px] uppercase mb-1">Referenční senzor (pomTep)</span>
               <span className="font-mono text-lg font-bold">{sim.valve === 'top' ? 'T3 (střed)' : 'T4 (spodek)'}: {currentPomTep.toFixed(1)}°</span>
@@ -296,9 +296,9 @@ export default function App() {
         </div>
 
         {/* Ovládací panel ESP32 */}
-        <div className="flex flex-wrap gap-4 mb-6 p-4 rounded-lg border bg-slate-50">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4 mb-6 p-2 sm:p-4 rounded-lg border bg-slate-50">
           
-          <div className="flex flex-col flex-1">
+          <div className="flex flex-col flex-1 min-w-[180px]">
             <span className="text-xs font-bold text-slate-500 uppercase mb-1 flex items-center gap-2">
               Solární čerpadlo (C)
               <span className={`w-2 h-2 rounded-full ${sim.pump ? 'bg-red-500' : 'bg-slate-300'}`}></span>
@@ -314,7 +314,7 @@ export default function App() {
             </span>
           </div>
 
-          <div className="flex flex-col relative flex-1 border-l pl-4">
+          <div className="flex flex-col relative flex-1 min-w-[180px] border-t sm:border-t-0 sm:border-l pl-0 sm:pl-4 pt-2 sm:pt-0">
             <span className="text-xs font-bold text-slate-500 uppercase mb-1">Přepínací ventil (V)</span>
             
             {/* Překrytí, pokud ESP32 řídí spirály automaticky */}
@@ -341,7 +341,7 @@ export default function App() {
             </span>
           </div>
 
-          <div className="flex flex-col flex-1 border-l pl-4">
+          <div className="flex flex-col flex-1 min-w-[180px] border-t sm:border-t-0 sm:border-l pl-0 sm:pl-4 pt-2 sm:pt-0">
             <span className="text-xs font-bold text-slate-500 uppercase mb-1 flex items-center gap-2">
               Okruh Pece (P)
               <span className={`w-2 h-2 rounded-full ${sim.furnacePump ? 'bg-orange-500' : 'bg-slate-300'}`}></span>
@@ -356,7 +356,7 @@ export default function App() {
         </div>
 
         {/* SVG PLÁTNO */}
-        <div className="flex-1 bg-[#f8fafc] border-2 border-slate-200 rounded-xl overflow-hidden relative min-h-[500px]">
+        <div className="flex-1 bg-[#f8fafc] border-2 border-slate-200 rounded-xl overflow-auto relative min-h-[300px] md:min-h-[500px] max-h-[70vh]">
           <svg viewBox="0 0 800 600" className="w-full h-full drop-shadow-sm">
             <defs>
               <linearGradient id="fireGrad" x1="0" y1="0" x2="0" y2="1">
